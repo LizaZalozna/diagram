@@ -29,11 +29,12 @@
             <Button Text="Згенерувати 20 точок"
             BackgroundColor="Aqua" TextColor="White"
             HeightRequest="50"
+            Clicked="OnGenerateClicked"
             HorizontalOptions="Center" Grid.Column="1" />
             <Button Text="Очистити і видалити всі точки"
             BackgroundColor="Aqua" TextColor="White"
             HeightRequest="50"
-                    Clicked="OnClearClicked"
+            Clicked="OnClearClicked"        
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="1" />
             <Button Text="Виконати однопотоково"
             BackgroundColor="Aqua" TextColor="White"

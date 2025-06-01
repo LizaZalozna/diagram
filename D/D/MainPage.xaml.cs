@@ -89,5 +89,22 @@ namespace D
             points = new List<Point>();
             canvasView.InvalidateSurface();
         }
+
+        private void OnGenerateClicked(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                var x = rnd.Next(0, (int)canvasView.CanvasSize.Width);
+                var y = rnd.Next(0, (int)canvasView.CanvasSize.Height);
+                var color = RandomColor();
+
+                points.Add(new Point
+                {
+                    Position = new SKPoint(x, y),
+                    Color = color
+                });
+            }
+            canvasView.InvalidateSurface();
+        }
     }
 }
