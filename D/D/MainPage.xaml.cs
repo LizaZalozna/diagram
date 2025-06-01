@@ -23,6 +23,11 @@ namespace D
             InitializeComponent();
         }
 
+        private double Distance(Point a, SKPoint b)
+        {
+            return Math.Sqrt(Math.Pow(a.Position.X - b.X, 2) + Math.Pow(a.Position.Y - b.Y, 2));
+        }
+
         private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             var canvas = e.Surface.Canvas;
@@ -57,20 +62,18 @@ namespace D
             if (e.ActionType == SKTouchAction.Released)
             {
                 var pos = e.Location;
-
-                if (e.DeviceType == SKTouchDeviceType.Mouse && e.MouseButton == SKMouseButton.Left)
+                var nearest = points.OrderBy(p => Distance(p, pos)).FirstOrDefault();
+                if (nearest != null && Distance(nearest, pos) < 20)
+                {
+                    points.Remove(nearest);
+                }
+                else
                 {
                     points.Add(new Point { Position = pos, Color = RandomColor() });
-                    canvasView.InvalidateSurface();
                 }
-                else if (e.DeviceType == SKTouchDeviceType.Mouse && e.MouseButton == SKMouseButton.Right)
-                {
-                    var toRemove = points.OrderBy(v => pos).FirstOrDefault();
-                    points.Remove(toRemove);
-                    canvasView.InvalidateSurface();
-                }
+                canvasView.InvalidateSurface();
+                e.Handled = true;
             }
-            e.Handled = true;
         }
 
         private SKColor RandomColor()
