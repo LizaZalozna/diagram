@@ -1,25 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="D.MainPage">
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             x:Class="D.MainPage"
+             Background="WhiteSmoke">
 
-    <StackLayout>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
-        </Frame>
-        <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
-        <Label Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="30,0,30,0"/>
-        <Label FontSize="16" Padding="30,24,30,0">
-            <Label.FormattedText>
-                <FormattedString>
-                    <FormattedString.Spans>
-                        <Span Text="Learn more at "/>
-                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
-                    </FormattedString.Spans>
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
-    </StackLayout>
+      <StackLayout>
+          <Grid ColumnSpacing="10" VerticalOptions="FillAndExpand" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="400"/>
+                </Grid.ColumnDefinitions>
+
+            <skia:SKCanvasView x:Name="canvasView"
+                       PaintSurface="OnCanvasViewPaintSurface"
+                       EnableTouchEvents="True"
+                       Touch="OnCanvasViewTouch"
+                       VerticalOptions="FillAndExpand" Grid.RowSpan="7" />
+            <Button Text="Згенерувати 20 точок"
+            BackgroundColor="Aqua" TextColor="White"
+            HeightRequest="50"
+            HorizontalOptions="Center" Grid.Column="1" />
+            <Button Text="Очистити і видалити всі точки"
+            BackgroundColor="Aqua" TextColor="White"
+            HeightRequest="50"
+            HorizontalOptions="Center" Grid.Column="1" Grid.Row="1" />
+            <Button Text="Виконати однопотоково"
+            BackgroundColor="Aqua" TextColor="White"
+            HeightRequest="50"
+            HorizontalOptions="Center" Grid.Column="1" Grid.Row="2" />
+            <Button Text="Виконати багатопотоково"
+            BackgroundColor="Aqua" TextColor="White"
+            HeightRequest="50"
+            HorizontalOptions="Center" Grid.Column="1" Grid.Row="3" />
+            <Button Text="Видалити вказаний відсоток точок"
+            BackgroundColor="Aqua" TextColor="White"
+            HeightRequest="50"
+            HorizontalOptions="Center" Grid.Column="1" Grid.Row="4" />
+            <Entry x:Name="Percentages" Keyboard="Numeric" BackgroundColor="Aqua" TextColor="White" Grid.Column="1" Grid.Row="5"></Entry>
+          </Grid>
+      </StackLayout>
 
 </ContentPage>
 
