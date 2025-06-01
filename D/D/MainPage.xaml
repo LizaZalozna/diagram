@@ -33,6 +33,7 @@
             <Button Text="Очистити і видалити всі точки"
             BackgroundColor="Aqua" TextColor="White"
             HeightRequest="50"
+                    Clicked="OnClearClicked"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="1" />
             <Button Text="Виконати однопотоково"
             BackgroundColor="Aqua" TextColor="White"

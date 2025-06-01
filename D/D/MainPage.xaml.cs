@@ -80,5 +80,11 @@ namespace D
                 (byte)rnd.Next(50, 256),
                 (byte)rnd.Next(50, 256));
         }
+
+        private void OnClearClicked(object sender, EventArgs e)
+        {
+            points = new List<Point>();
+            canvasView.InvalidateSurface();
+        }
     }
 }
