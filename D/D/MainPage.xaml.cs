@@ -5,6 +5,7 @@ using Xamarin.Forms;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System.Threading;
+using System.Diagnostics;
 
 namespace D
 {
@@ -129,6 +130,11 @@ namespace D
 
         private void DrawD(SKCanvas canvas, SKImageInfo info)
         {
+            var process = Process.GetCurrentProcess();
+            var cpuBefore = process.TotalProcessorTime;
+            Stopwatch sw = Stopwatch.StartNew();
+            long memBefore = GC.GetTotalMemory(true);
+
             pixelCount = points.ToDictionary(p => p, p => 0);
             using (var bitmap = new SKBitmap(info.Width, info.Height))
             {
@@ -144,6 +150,18 @@ namespace D
                 }
                 canvas.DrawBitmap(bitmap, 0, 0);
             }
+
+            sw.Stop();
+            long memAfter = GC.GetTotalMemory(false);
+            var cpuAfter = process.TotalProcessorTime;
+
+            double elapsed = sw.Elapsed.TotalSeconds;
+            double cpuElapsed = (cpuAfter - cpuBefore).TotalSeconds;
+            double memMB = (memAfter - memBefore) / (1024.0 * 1024.0);
+
+            PerformanceLabel.Text = $"Реальний час: {elapsed} " +
+                                    $"\nCPU час: {cpuElapsed} " +
+                                    $"\nПамʼять: {memMB}";
         }
 
         private void Draw2Clicked(object sender, EventArgs e)
@@ -155,6 +173,11 @@ namespace D
 
         private void DrawDParallel(SKCanvas canvas, SKImageInfo info)
         {
+            var process = Process.GetCurrentProcess();
+            var cpuBefore = process.TotalProcessorTime;
+            Stopwatch sw = Stopwatch.StartNew();
+            long memBefore = GC.GetTotalMemory(true);
+
             int width = info.Width;
             int height = info.Height;
 
@@ -162,13 +185,13 @@ namespace D
             object lockObj = new object();
 
             var bitmap = new SKBitmap(width, height);
-            Thread[] threads = new Thread[6];
-            int rowsPerThread = height / 6;
+            Thread[] threads = new Thread[8];
+            int rowsPerThread = height / 8;
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 8; i++)
             {
                 int startY = i * rowsPerThread;
-                int endY = (i == 5) ? height : (i + 1) * rowsPerThread;
+                int endY = (i == 7) ? height : (i + 1) * rowsPerThread;
 
                 threads[i] = new Thread(() =>
                 {
@@ -196,6 +219,18 @@ namespace D
 
             pixelCount = localPixelCounts;
             canvas.DrawBitmap(bitmap, 0, 0);
+
+            sw.Stop();
+            long memAfter = GC.GetTotalMemory(false);
+            var cpuAfter = process.TotalProcessorTime;
+
+            double elapsed = sw.Elapsed.TotalSeconds;
+            double cpuElapsed = (cpuAfter - cpuBefore).TotalSeconds;
+            double memMB = (memAfter - memBefore) / (1024.0 * 1024.0);
+
+            PerformanceLabel.Text = $"Реальний час: {elapsed} " +
+                                    $"\nCPU час: {cpuElapsed} " +
+                                    $"\nПамʼять: {memMB}";
         }
 
         private void DeletePointsClicked(object sender, EventArgs e)

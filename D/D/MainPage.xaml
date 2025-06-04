@@ -52,6 +52,7 @@
             Clicked="DeletePointsClicked"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="4" />
             <Entry x:Name="Percentages" Keyboard="Numeric" BackgroundColor="Aqua" TextColor="Black" Grid.Column="1" HeightRequest="25" Grid.Row="5"></Entry>
+            <Label x:Name="PerformanceLabel" TextColor="Black" Grid.Column="1" Grid.Row="6"/>
           </Grid>
       </StackLayout>
 
