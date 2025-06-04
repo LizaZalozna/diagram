@@ -20,6 +20,7 @@ namespace D
         Random rnd = new Random();
         bool draw =false;
         bool useParallel = false;
+        Dictionary<Point, int> pixelCount = new Dictionary<Point, int>();
 
         public MainPage()
         {
@@ -128,6 +129,7 @@ namespace D
 
         private void DrawD(SKCanvas canvas, SKImageInfo info)
         {
+            pixelCount = points.ToDictionary(p => p, p => 0);
             using (var bitmap = new SKBitmap(info.Width, info.Height))
             {
                 for (int y = 0; y < info.Height; y++)
@@ -137,6 +139,7 @@ namespace D
                         SKPoint current = new SKPoint(x, y);
                         var nearest = points.OrderBy(p => Distance(p, current)).First();
                         bitmap.SetPixel(x, y, nearest.Color);
+                        pixelCount[nearest]++;
                     }
                 }
                 canvas.DrawBitmap(bitmap, 0, 0);
@@ -154,6 +157,9 @@ namespace D
         {
             int width = info.Width;
             int height = info.Height;
+
+            var localPixelCounts = points.ToDictionary(p => p, p => 0);
+            object lockObj = new object();
 
             var bitmap = new SKBitmap(width, height);
             Thread[] threads = new Thread[6];
@@ -173,6 +179,11 @@ namespace D
                             SKPoint current = new SKPoint(x, y);
                             var nearest = points.OrderBy(p => Distance(p, current)).First();
                             bitmap.SetPixel(x, y, nearest.Color);
+
+                            lock (lockObj)
+                            {
+                                localPixelCounts[nearest]++;
+                            }
                         }
                     }
                 });
@@ -183,8 +194,35 @@ namespace D
             foreach (var t in threads)
                 t.Join();
 
+            pixelCount = localPixelCounts;
             canvas.DrawBitmap(bitmap, 0, 0);
         }
 
+        private void DeletePointsClicked(object sender, EventArgs e)
+        {
+            if (!draw)
+            {
+                DisplayAlert("Помилка", "Діаграму не побудовано або порожній набір!", "OK");
+                return;
+            }
+
+            if (int.TryParse(Percentages.Text, out int percentages) && percentages > 0 && percentages <= 100)
+            {
+                int countToRemove = (int)Math.Floor(points.Count * percentages / 100.0);
+                var toRemove = pixelCount.OrderBy(p => p.Value)
+                                         .Take(countToRemove)
+                                         .Select(p => p.Key)
+                                         .ToList();
+
+                foreach (var p in toRemove)
+                    points.Remove(p);
+
+                canvasView.InvalidateSurface();
+            }
+            else
+            {
+                DisplayAlert("Помилка", "Введіть коректне значення відсотків (1–100)!", "OK");
+            }
+        }
     }
 }
