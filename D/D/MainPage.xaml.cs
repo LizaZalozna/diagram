@@ -4,6 +4,7 @@ using System.Linq;
 using Xamarin.Forms;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
+using System.Threading;
 
 namespace D
 {
@@ -42,7 +43,8 @@ namespace D
             if (draw)
             {
                 if (!useParallel)
-                    DrawD(canvas, info);                    
+                    DrawD(canvas, info);
+                else DrawDParallel(canvas, info);
             }
 
             foreach (var p in points)
@@ -69,7 +71,6 @@ namespace D
 
         private void OnCanvasViewTouch(object sender, SKTouchEventArgs e)
         {
-            draw = false;
             if (e.ActionType == SKTouchAction.Released)
             {
                 var pos = e.Location;
@@ -103,7 +104,6 @@ namespace D
 
         private void OnGenerateClicked(object sender, EventArgs e)
         {
-            draw = false;
             for (int i = 0; i < 20; i++)
             {
                 var x = rnd.Next(0, (int)canvasView.CanvasSize.Width);
@@ -142,5 +142,49 @@ namespace D
                 canvas.DrawBitmap(bitmap, 0, 0);
             }
         }
+
+        private void Draw2Clicked(object sender, EventArgs e)
+        {
+            draw = true;
+            useParallel = true;
+            canvasView.InvalidateSurface();
+        }
+
+        private void DrawDParallel(SKCanvas canvas, SKImageInfo info)
+        {
+            int width = info.Width;
+            int height = info.Height;
+
+            var bitmap = new SKBitmap(width, height);
+            Thread[] threads = new Thread[6];
+            int rowsPerThread = height / 6;
+
+            for (int i = 0; i < 6; i++)
+            {
+                int startY = i * rowsPerThread;
+                int endY = (i == 5) ? height : (i + 1) * rowsPerThread;
+
+                threads[i] = new Thread(() =>
+                {
+                    for (int y = startY; y < endY; y++)
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            SKPoint current = new SKPoint(x, y);
+                            var nearest = points.OrderBy(p => Distance(p, current)).First();
+                            bitmap.SetPixel(x, y, nearest.Color);
+                        }
+                    }
+                });
+
+                threads[i].Start();
+            }
+
+            foreach (var t in threads)
+                t.Join();
+
+            canvas.DrawBitmap(bitmap, 0, 0);
+        }
+
     }
 }

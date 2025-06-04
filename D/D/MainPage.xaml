@@ -13,7 +13,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -39,17 +39,18 @@
             <Button Text="Виконати однопотоково"
             BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
-                    Clicked="Draw1Clicked"
+            Clicked="Draw1Clicked"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="2" />
             <Button Text="Виконати багатопотоково"
             BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
+            Clicked="Draw2Clicked"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="3" />
             <Button Text="Видалити вказаний відсоток точок"
             BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="4" />
-            <Entry x:Name="Percentages" Keyboard="Numeric" BackgroundColor="Aqua" TextColor="Black" Grid.Column="1" Grid.Row="5"></Entry>
+            <Entry x:Name="Percentages" Keyboard="Numeric" BackgroundColor="Aqua" TextColor="Black" Grid.Column="1" HeightRequest="20" Grid.Row="5"></Entry>
           </Grid>
       </StackLayout>
 
