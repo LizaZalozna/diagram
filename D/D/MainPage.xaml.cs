@@ -17,6 +17,8 @@ namespace D
 
         List<Point> points = new List<Point>();
         Random rnd = new Random();
+        bool draw =false;
+        bool useParallel = false;
 
         public MainPage()
         {
@@ -31,10 +33,18 @@ namespace D
         private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             var canvas = e.Surface.Canvas;
+            var info = e.Info;
             canvas.Clear(SKColors.White);
 
             if (points.Count == 0)
                 return;
+
+            if (draw)
+            {
+                if (!useParallel)
+                    DrawD(canvas, info);                    
+            }
+
             foreach (var p in points)
             {
                 using (var paint = new SKPaint
@@ -59,6 +69,7 @@ namespace D
 
         private void OnCanvasViewTouch(object sender, SKTouchEventArgs e)
         {
+            draw = false;
             if (e.ActionType == SKTouchAction.Released)
             {
                 var pos = e.Location;
@@ -92,6 +103,7 @@ namespace D
 
         private void OnGenerateClicked(object sender, EventArgs e)
         {
+            draw = false;
             for (int i = 0; i < 20; i++)
             {
                 var x = rnd.Next(0, (int)canvasView.CanvasSize.Width);
@@ -105,6 +117,30 @@ namespace D
                 });
             }
             canvasView.InvalidateSurface();
+        }
+
+        private void Draw1Clicked(object sender, EventArgs e)
+        {
+            draw = true;
+            useParallel = false;
+            canvasView.InvalidateSurface();
+        }
+
+        private void DrawD(SKCanvas canvas, SKImageInfo info)
+        {
+            using (var bitmap = new SKBitmap(info.Width, info.Height))
+            {
+                for (int y = 0; y < info.Height; y++)
+                {
+                    for (int x = 0; x < info.Width; x++)
+                    {
+                        SKPoint current = new SKPoint(x, y);
+                        var nearest = points.OrderBy(p => Distance(p, current)).First();
+                        bitmap.SetPixel(x, y, nearest.Color);
+                    }
+                }
+                canvas.DrawBitmap(bitmap, 0, 0);
+            }
         }
     }
 }

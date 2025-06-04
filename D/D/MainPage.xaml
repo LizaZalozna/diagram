@@ -27,28 +27,29 @@
                        Touch="OnCanvasViewTouch"
                        VerticalOptions="FillAndExpand" Grid.RowSpan="7" />
             <Button Text="Згенерувати 20 точок"
-            BackgroundColor="Aqua" TextColor="White"
+            BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
             Clicked="OnGenerateClicked"
             HorizontalOptions="Center" Grid.Column="1" />
             <Button Text="Очистити і видалити всі точки"
-            BackgroundColor="Aqua" TextColor="White"
+            BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
             Clicked="OnClearClicked"        
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="1" />
             <Button Text="Виконати однопотоково"
-            BackgroundColor="Aqua" TextColor="White"
+            BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
+                    Clicked="Draw1Clicked"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="2" />
             <Button Text="Виконати багатопотоково"
-            BackgroundColor="Aqua" TextColor="White"
+            BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="3" />
             <Button Text="Видалити вказаний відсоток точок"
-            BackgroundColor="Aqua" TextColor="White"
+            BackgroundColor="Aqua" TextColor="Black"
             HeightRequest="50"
             HorizontalOptions="Center" Grid.Column="1" Grid.Row="4" />
-            <Entry x:Name="Percentages" Keyboard="Numeric" BackgroundColor="Aqua" TextColor="White" Grid.Column="1" Grid.Row="5"></Entry>
+            <Entry x:Name="Percentages" Keyboard="Numeric" BackgroundColor="Aqua" TextColor="Black" Grid.Column="1" Grid.Row="5"></Entry>
           </Grid>
       </StackLayout>
 
